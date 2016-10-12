@@ -1,26 +1,33 @@
 package p;
 use strict;
 
-
-sub log {
+# Send an error message to the defined error handling routines
+sub error_log {
     my ($messge) = @_;
 }
 
+# Perform a regular expression search and replace
 sub preg_replace {
     my ($pattern , $replacement, $subject) = @_;
-    $subject =~ s{$pattern}{$replacement}im;
+
+    my $code = 'sub {
+        $_[0] =~ s{$pattern}{'. $replacement . '}ig
+    }';
+    my $re = eval $code;
+    $re->($subject);
+
     return $subject;
 }
 
-
+# Replace all occurrences of the search string with the replacement string
 sub str_replace {
     my ($search, $replacement, $subject) = @_;
 
     if (! ref $search) {
-        log('$search must be refrenced');
+        error_log('$search must be refrenced');
     }
     elsif (! ref $replacement) {
-        log('$replacement must be refrenced');
+        error_log('$replacement must be refrenced');
     }
     else {
 
@@ -36,7 +43,7 @@ sub str_replace {
                 my $replacement_size = scalar( @{$replacement} );
 
                 if ($search_size != $replacement_size) {
-                    log('search size dosnt match replacement size');
+                    error_log('search size dosnt match replacement size');
                 }
                 else {
                     for (my $i = 0; $i < $search_size; $i++) {
@@ -51,11 +58,52 @@ sub str_replace {
             }
         }
         elsif (ref($search) eq "HASH") {
-            log('str replace does not support hashes');
+            error_log('str replace does not support hashes');
         }
     }
     return $subject;
 }
 
+# Strip whitespace (or other characters) from the beginning and end of a string
+sub trim {
+    my ($string, $character_mask) = @_;
 
+    print Dumper($string);
+
+    print '<br />';
+    if (defined($character_mask)) {
+        $string = preg_replace("([\\$character_mask]*)(.+)([\\$character_mask]+)", '$2', $string);
+    }
+    else {
+        $string = preg_replace('(\s*)(.+)\b(\s*)', '$2', $string);
+
+    }
+    print Dumper($string);
+}
+
+# Strip whitespace (or other characters) from the beginning of a string
+sub ltrim {
+    my ($string, $character_mask) = @_;
+
+    if (defined($character_mask)) {
+        $string = preg_replace("([\\$character_mask]*)(.+)", '$2', $string);
+    }
+    else {
+        $string = preg_replace('(\s*)(.+)\b(\s*)', '$2', $string);
+    }
+    return $string;
+}
+
+#  Strip whitespace (or other characters) from the end of a string
+sub rtrim {
+    my ($string, $character_mask) = @_;
+
+    if (defined($character_mask)) {
+        $string = preg_replace("(.+)([\\$character_mask]+)", '$1', $string);
+    }
+    else {
+        $string = preg_replace('(.+)\b(\s*)', '$1', $string);
+    }
+    return $string;
+}
 1;
