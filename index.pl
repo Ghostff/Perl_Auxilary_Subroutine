@@ -10,7 +10,7 @@ print p::str_replace(\'he', \'she', 'he is behind you');
 my @patterns = ('he', 'is');
 my @replacements = ('she', 'was');
 print p::str_replace(\@patterns, \@replacements, 'he is behind you');
-#outputs (he was behind you)
+#outputs (she was behind you)
 
 
 print p::str_repeat('+', 5);
