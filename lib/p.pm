@@ -9,7 +9,6 @@ sub error_log {
 # Perform a regular expression search and replace
 sub preg_replace {
     my ($pattern , $replacement, $subject) = @_;
-
     my $code = 'sub {
         $_[0] =~ s{$pattern}{'. $replacement . '}ig
     }';
@@ -68,17 +67,16 @@ sub str_replace {
 sub trim {
     my ($string, $character_mask) = @_;
 
-    print Dumper($string);
-
-    print '<br />';
     if (defined($character_mask)) {
-        $string = preg_replace("([\\$character_mask]*)(.+)([\\$character_mask]+)", '$2', $string);
+        $string = preg_replace(
+            '^[\\' . $character_mask . ']*|[\\' . $character_mask . ']*$',
+            '$2',
+            $string
+        );
     }
     else {
-        $string = preg_replace('(\s*)(.+)\b(\s*)', '$2', $string);
-
+        $string = preg_replace('^[\s]*|[\s]*$', '$2', $string);
     }
-    print Dumper($string);
 }
 
 # Strip whitespace (or other characters) from the beginning of a string
@@ -99,11 +97,111 @@ sub rtrim {
     my ($string, $character_mask) = @_;
 
     if (defined($character_mask)) {
-        $string = preg_replace("(.+)([\\$character_mask]+)", '$1', $string);
+        $string = preg_replace('[\\' . $character_mask . ']*$', '$1', $string);
     }
     else {
-        $string = preg_replace('(.+)\b(\s*)', '$1', $string);
+        $string = preg_replace('[\s]*$', '$2', $string);
     }
     return $string;
 }
+
+# Split a string by string
+sub explode {
+    my ($delimiter, $string, $limit) = @_;
+    my @pieces = split /$delimiter/, $string, $limit;
+    return @pieces;
+}
+
+# Join array elements with a string Alias of join
+sub implode {
+    my ($glue , $pieces) = @_;
+
+    if (! ref $glue) {
+        error_log('glue must be refrenced');
+    }
+    else {
+        if (ref($glue) ne "SCALAR") {
+            if (defined($pieces)) {
+                error_log('$glue must be a string');
+            }
+            else {
+                $pieces = $glue;
+                $glue = '';
+            }
+        }
+    }
+    return join($glue, @{$pieces});
+}
+
+# Repeat a string
+sub str_repeat {
+    my ($input, $multiplier ) = @_;
+    return $input x $multiplier;
+}
+
+# Generate a better random value
+sub mt_rand {
+    my ($min, $max ) = @_;
+    if (defined($min) && defined($max)) {
+        RESPAWN:
+          my $rand = int(rand($max+1));
+
+        if ($rand >= $min) {
+            return $rand;
+        }
+        else {
+            goto RESPAWN;
+        }
+    }
+    else {
+        return int(rand(99999999999));
+    }
+}
+
+# Create an array containing a range of elements
+sub range {
+    my ($start, $end, $step) = @_;
+
+    if (defined($step)) {
+        my @range;
+        if($start =~ /^\w$/ && $end =~ /^\w$/) {
+            my @new_range = ($start .. $end);
+            for (my $i = 0; $i < scalar(@new_range); $i += $step) {
+                push(@range, @new_range[$i]);
+            }
+        }
+        else {
+            for (my $i = $start; $i < $end; $i += 2) {
+                push(@range, $i);
+            }
+        }
+        return @range;
+    }
+    else {
+        return ($start .. $end);
+    }
+}
+
+# Filters elements of an array using a callback function
+sub array_filter {
+
+
+}
+
+# Fill an array with values
+sub array_fill {
+    my ($start_index, $num, $value) = @_;
+
+    my @fill;
+    for (my $i = 1; $i <= $num; $i++, $start_index++) {
+        $fill[$start_index] = $value;
+    }
+    return @fill;
+}
+
+sub str_shuffle {
+
+}
+
+
 1;
