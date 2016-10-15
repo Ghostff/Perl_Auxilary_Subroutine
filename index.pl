@@ -16,9 +16,13 @@ print p::str_replace(\@patterns, \@replacements, 'he is behind you');
 print p::str_repeat('+', 5);
 #outputs (+++++)
 
-
+#while using any preg try passing your patterns in a single qoute
 print p::preg_replace('([\-]*)(.*)([\-]*)', '$2', '- Foo Bar -')
 #outputs ( Foo Bar )
+
+
+print p::preg_split('[\s,]+', "hypertext language, programming");
+#outputs ([0] => 'hypertext'; [1] => 'language'; [2] => 'programming');
 
 
 print p::trim(' Foo Bar ')
@@ -67,3 +71,9 @@ print p::array_fill(5, 4, 'Foobar');
 #outputs  ([5] => Foobar [6] => Foobar [7] => Foobar [8] => Foobar)
 print p::array_fill(-5, 6, 'BarFoo');
 #outputs  ( [-5] => BarFoo [0] => BarFoo [1] => BarFoo [2] => BarFoo [3] => BarFoo [4] => BarFoo)
+
+
+print p::str_shuffle('abcdef');
+#outputs something like: (bfdaec)
+print p::str_shuffle(123456);
+#outputs something like: (256314)

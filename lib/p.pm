@@ -1,5 +1,6 @@
 package p;
 use strict;
+use Data::Dumper;
 
 # Send an error message to the defined error handling routines
 sub error_log {
@@ -182,10 +183,15 @@ sub range {
     }
 }
 
+# Split string by a regular expression
+sub preg_split {
+    my ($pattern, $subject, $limit) = @_;
+    my @list = split(/$pattern/, $subject, $limit);
+    return @list;
+}
+
 # Filters elements of an array using a callback function
 sub array_filter {
-
-
 }
 
 # Fill an array with values
@@ -199,9 +205,27 @@ sub array_fill {
     return @fill;
 }
 
+# Randomly shuffles a string
 sub str_shuffle {
+    my ($string) = @_;
+    my @list = split(//, $string);
 
+    my @new_list;
+    my $length = scalar @list;
+
+    for (my $i = 0; $i < $length; $i++) {
+
+        OFFLOAD:
+          my $shuffle = int(rand($length));
+
+        if ( ! exists $new_list[$shuffle]) {
+            $new_list[$shuffle] = $list[$i];
+        }
+        else {
+            goto OFFLOAD;
+        }
+    }
+
+    return join('', @new_list);
 }
-
-
 1;
