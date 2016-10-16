@@ -190,10 +190,6 @@ sub preg_split {
     return @list;
 }
 
-# Filters elements of an array using a callback function
-sub array_filter {
-}
-
 # Fill an array with values
 sub array_fill {
     my ($start_index, $num, $value) = @_;
@@ -227,5 +223,18 @@ sub str_shuffle {
     }
 
     return join('', @new_list);
+}
+
+# Applies the callback to the elements of the given arrays
+sub array_map {
+
+    my ($callback, @array) = @_;
+
+    my @new_array;
+
+    foreach my $key (@array) {
+        print $key, '=', $ENV{$key}, "\n";
+    }
+
 }
 1;
