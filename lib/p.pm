@@ -5,6 +5,8 @@ use Data::Dumper;
 # Send an error message to the defined error handling routines
 sub error_log {
     my ($messge) = @_;
+
+    print '<pre>' . $messge . '</pre>';
 }
 
 # Perform a regular expression search and replace
@@ -20,7 +22,7 @@ sub preg_replace {
 }
 
 # Replace all occurrences of the search string with the replacement string
-sub str_replace {
+sub str_replace() {
     my ($search, $replacement, $subject) = @_;
 
     if (! ref $search) {
@@ -83,12 +85,11 @@ sub trim {
 # Strip whitespace (or other characters) from the beginning of a string
 sub ltrim {
     my ($string, $character_mask) = @_;
-
     if (defined($character_mask)) {
-        $string = preg_replace("([\\$character_mask]*)(.+)", '$2', $string);
+        $string = preg_replace("^([\\$character_mask]*)(.+)", '$2', $string);
     }
     else {
-        $string = preg_replace('(\s*)(.+)\b(\s*)', '$2', $string);
+        $string = preg_replace('^(\s*)(.+)$', '$2', $string);
     }
     return $string;
 }
@@ -225,16 +226,65 @@ sub str_shuffle {
     return join('', @new_list);
 }
 
+sub m {
+     my ($n, $m) = @_;
+     return("The number $n is called $m in Spanish");
+}
+
 # Applies the callback to the elements of the given arrays
 sub array_map {
-
-    my ($callback, @array) = @_;
-
-    my @new_array;
-
-    foreach my $key (@array) {
-        print $key, '=', $ENV{$key}, "\n";
+    my ($callback, $arrays) = @_;
+    if ( ! ref $arrays) {
+        error_log('@arrays must be refrenced');
     }
+    else {
+        my @arg = $arrays;
+        my @array;
+        if ( exists(&{$callback})) {
+            my $sub = \&{$callback};
+
+            if (defined(@arg[5])) {
+
+            }
+            elsif (defined(@arg[4])) {
+
+            }
+            elsif (defined(@arg[3])) {
+
+            }
+            elsif (defined(@arg[2])) {
+
+            }
+            elsif (defined(@arg[1])) {
+                @array = map($sub->(@$_), @{ $arg[0] }, @{ $arg[1]});
+            }
+            else {
+                @array = map($sub->($_), @{$arg[0]});
+            }
+        }
+        else {
+            if (defined(@arg[5])) {
+
+            }
+            elsif (defined(@arg[4])) {
+
+            }
+            elsif (defined(@arg[3])) {
+
+            }
+            elsif (defined(@arg[2])) {
+
+            }
+            elsif (defined(@arg[1])) {
+
+            }
+            else {
+                @array = map (eval($callback),  @{$arg[0]});
+            }
+        }
+
+        return @array;
+  }
 
 }
 1;

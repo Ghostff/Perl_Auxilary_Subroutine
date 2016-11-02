@@ -77,3 +77,9 @@ print p::str_shuffle('abcdef');
 #outputs something like: (bfdaec)
 print p::str_shuffle(123456);
 #outputs something like: (256314)
+
+my @array = ('hey ', ' look ');
+print p::array_map('trim', \@array);
+#outputs  ([0] => hey [1] => look)
+print p::array_map('uc', \@array);
+#outputs  ([0] => HEY [1] => LOOK)
