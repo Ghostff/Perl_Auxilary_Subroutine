@@ -226,11 +226,6 @@ sub str_shuffle {
     return join('', @new_list);
 }
 
-sub m {
-     my ($n, $m) = @_;
-     return("The number $n is called $m in Spanish");
-}
-
 # Applies the callback to the elements of the given arrays
 sub array_map {
     my ($callback, $arrays) = @_;
